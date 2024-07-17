@@ -1,0 +1,15 @@
+<div
+  *ngIf="options"
+  class="map-container"
+  leaflet
+  [leafletOptions]="options"
+  (leafletMapReady)="onMapReady($event)"
+  [leafletCenter]="coord"
+  #mapRoot
+>
+  <div *ngIf="marker" [leafletLayer]="marker"></div>
+  <div *ngIf="radius" [leafletLayer]="radius"></div>
+  <div *ngFor="let locationMarker of locationMarkers" [leafletLayer]="locationMarker"></div>
+</div>
+
+<div class="d-none"><div #hiddenReviews></div></div>

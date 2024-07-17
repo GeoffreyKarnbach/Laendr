@@ -1,0 +1,24 @@
+<div class="locgrid mt-3 mb-4">
+  <div class="locgrid-map">
+    <app-location-map
+      [zoom]="7"
+      [locations]="locations"
+      [showLocationPopup]="true"
+      class="full-height"
+    ></app-location-map>
+  </div>
+  <div class="card box-shadow cursor" (click)="onClickCard(location.id)" *ngFor="let location of locations">
+    <img [src]="location.primaryImageUrl" class="card-img-top">
+    <div class="card-body">
+      <h1 class="card-title fs-6 fw-bold text-primary">{{ location.name }}</h1>
+      <app-ratings-display
+        class="rating-display"
+        [stars]="location.reputation?.averageRating | ratingToStars"
+        [count]="location.reputation?.ratings ?? 0"
+      ></app-ratings-display>
+      <p class="card-text text-secondary">
+        {{ location.size }}m², {{ location.address }}, {{ location.plz?.plz }} {{ location.plz?.ort }}
+      </p>
+    </div>
+  </div>
+</div>

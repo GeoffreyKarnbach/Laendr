@@ -1,0 +1,11 @@
+.starbox {
+	display: inline-flex;
+	flex-direction: row;
+	align-items: baseline;
+}
+
+.starbox > i {
+	margin-left: 1px;
+	margin-right: 1px;
+    cursor: pointer;
+}

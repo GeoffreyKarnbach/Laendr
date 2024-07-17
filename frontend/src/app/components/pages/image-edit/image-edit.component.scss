@@ -1,0 +1,11 @@
+
+#image-container {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 200px);
+  gap: 50px 50px;
+  justify-items: center;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5rem;
+}

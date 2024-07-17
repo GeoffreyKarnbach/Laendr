@@ -1,0 +1,291 @@
+<div class="row g-3 mt-2">
+  <div class="col-3">
+    <div class="card">
+      <h4 class="card-header">Suchkriterien</h4>
+      <div class="card-body">
+        <div>
+          <div>
+            <section id="filterCollapsed">
+              <form>
+                <div class="form-group">
+                  <label for="priceRange" class="fw-bold">Preis</label>
+                  <div id="priceRange" class="form-group row g-1">
+                    <div class="col-6">
+                      <!-- <label for="priceRangeFrom">Von</label> -->
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="priceRangeFrom"
+                        placeholder="Startpreis"
+                        name="priceRangeFrom"
+                        [(ngModel)]="filter.priceFrom"
+                        (keydown.enter)="onClickSearch()"
+                      />
+                    </div>
+                    <div class="col-6">
+                      <!-- <label for="priceRangeTo">Bis</label> -->
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="priceRangeTo"
+                        placeholder="Endpreis"
+                        name="priceRangeTo"
+                        [(ngModel)]="filter.priceTo"
+                        (keydown.enter)="onClickSearch()"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group mt-2">
+                  <label for="timeRange" class="fw-bold">Zeitraum</label>
+                  <div class="row">
+                    <div class="col-6">
+                      <label for="timeRangeFrom">Von</label>
+                      <div class="input-group">
+                        <input
+                          class="form-control"
+                          placeholder="dd.mm.yyyy"
+                          name="timeRangeFrom"
+                          [(ngModel)]="timeFrom"
+                          ngbDatepicker
+                          #d="ngbDatepicker"
+                          (dateSelect)="onClickSearch()"
+                          [markDisabled]="markDisabledDays"
+                        />
+                        <button
+                          class="btn btn-outline-secondary bi bi-calendar3"
+                          (click)="d.toggle()"
+                          type="button"
+                        ></button>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <label for="timeRangeTo">Bis</label>
+                      <div class="input-group">
+                        <input
+                          class="form-control"
+                          placeholder="dd.mm.yyyy"
+                          name="timeRangeTo"
+                          [(ngModel)]="timeTo"
+                          ngbDatepicker
+                          #b="ngbDatepicker"
+                          (dateSelect)="onClickSearch()"
+                          [markDisabled]="markDisabledDays"
+                        />
+                        <button
+                          class="btn btn-outline-secondary bi bi-calendar3"
+                          (click)="b.toggle()"
+                          type="button"
+                        ></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group mt-2">
+                  <label for="state" class="fw-bold">Bundesland</label>
+                  <select
+                    class="form-select"
+                    id="locationState"
+                    name="locationState"
+                    [(ngModel)]="filter.state"
+                    (change)="onClickSearch()"
+                  >
+                    <option value="EMPTY"></option>
+                    <option value="W">Wien</option>
+                    <option value="NOE">Niederösterreich</option>
+                    <option value="OOE">Oberösterreich</option>
+                    <option value="BGLD">Burgenland</option>
+                    <option value="KTN">Kärnten</option>
+                    <option value="SBG">Salzburg</option>
+                    <option value="STMK">Steiermark</option>
+                    <option value="T">Tirol</option>
+                    <option value="VBG">Vorarlberg</option>
+                  </select>
+                </div>
+                <div class="form-group mt-2">
+                  <label for="plz" class="fw-bold">PLZ</label>
+                  <div>
+                    <input
+                      type="text"
+                      id="locationPlz"
+                      name="locationPlz"
+                      class="form-control"
+                      [class]="dynamicCssClassesForInput(locationPlzModel)"
+                      [(ngModel)]="filter.plz.plz"
+                      (change)="onClickSearch()"
+                      (ngModelChange)="plzInputChange.next($event)"
+                      #locationPlzModel="ngModel"
+                      list="plz-suggestions"
+                    />
+                    <datalist id="plz-suggestions">
+                      <option *ngFor="let plz of plzSuggestions" [value]="plz.plz"></option>
+                    </datalist>
+                  </div>
+                </div>
+                <div class="form-group mt-2">
+                  <label for="address" class="fw-bold">Adresse</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="address"
+                    name="address"
+                    [(ngModel)]="filter.address"
+                    [class]="dynamicCssClassesForInput(locationAddressModel)"
+                    #locationAddressModel="ngModel"
+                    (keydown.enter)="onClickSearch()"
+                  />
+                </div>
+
+                <div class="form-group mt-2">
+                  <label for="filterSelectedTag" class="fw-bold">Tags</label>
+                  <div class="input-group">
+                    <select
+                      class="form-select"
+                      id="filterSelectedTag"
+                      name="filterSelectedTag"
+                      [(ngModel)]="selectedTag"
+                    >
+                      <option *ngFor="let tag of tags | keyvalue" [value]="tag.id" [ngValue]="tag.value">
+                        {{ tag.value }}
+                      </option>
+                    </select>
+                    <button type="button" class="btn btn-outline-secondary" (click)="onTagAdded()">
+                      <i class="bi bi-plus-circle"></i>
+                    </button>
+                  </div>
+                  <div style="margin-top: 0.5em">
+                    <app-tag
+                      *ngFor="let tag of filter.tags; let i = index"
+                      style="display: inline-block"
+                      [tagname]="tag"
+                      [isEditable]="true"
+                      [position]="i + 1"
+                      [totalTagNumber]="filter.tags.length"
+                      (deleteTagEvent)="deleteTag($event)"
+                    />
+                  </div>
+                </div>
+
+                <app-map-filter
+                  *ngIf="filterActive"
+                  [(position)]="filter.position"
+                  (keydownEnter)="onClickSearch()"
+                  [onlyDistance]="mode === enumMode.MAP"
+                  [locations]="locations"
+                ></app-map-filter>
+              </form>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-9 ps-4">
+    <div class="input-group mb-4">
+      <input
+        type="text"
+        class="form-control search-text-input"
+        placeholder="Suche..."
+        name="searchString"
+        [(ngModel)]="filter.searchString"
+        (keydown.enter)="onClickSearch()"
+      />
+      <button type="button" class="btn btn-primary" (click)="onClickSearch()">Suchen</button>
+    </div>
+
+    <ul class="nav nav-tabs mb-3">
+      <li class="nav-item">
+        <span
+          role="button"
+          class="nav-link"
+          [class.active]="mode === enumMode.LIST"
+          (click)="onChangeMode(enumMode.LIST)"
+          (keydown.enter)="onChangeMode(enumMode.LIST)"
+          tabindex="0"
+          >Liste</span
+        >
+      </li>
+      <li class="nav-item">
+        <span
+          role="button"
+          class="nav-link"
+          [class.active]="mode === enumMode.MAP"
+          (click)="onChangeMode(enumMode.MAP)"
+          (keydown.enter)="onChangeMode(enumMode.MAP)"
+          tabindex="0"
+          >Karte</span
+        >
+      </li>
+    </ul>
+
+    <select class="form-select" (change)="onChangeSort($event.target.value)">
+      <option
+        *ngFor="let sortOption of enumSort | keyvalue"
+        [value]="sortOption.key"
+        [selected]="sort === sortOption.key"
+      >
+        {{ enumToDisplaySort[sortOption.key] }}
+      </option>
+    </select>
+
+    <app-pageable
+      [collectionSize]="totalAmount"
+      (pageChange)="onPageChange($event)"
+      [page]="page + 1"
+      [pageSize]="pageSize"
+      *ngIf="locations.length && mode === enumMode.LIST"
+    >
+      <ng-template let-pageInfo>
+        <div class="row my-3" *ngFor="let location of locations">
+          <div class="card box-shadow cursor" (click)="onClickCard(location.id)">
+            <div class="row no-gutters">
+              <div class="col-auto px-0 me-2 d-flex rounded-start image-container">
+                <div class="bg-light d-flex rounded-start">
+                  <img [src]="location.primaryImageUrl" class="img-fluid rounded-start image_thumbnail" alt="" />
+                </div>
+              </div>
+              <div class="col my-3 ps-1">
+                <div class="card-block px-2">
+                  <h5 class="card-title fw-bold text-primary">{{ location.name }}</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">{{ location.createdAt | date }}</h6>
+                  <div class="position-absolute top-0 end-0 pe-4 pt-3">
+                    <app-ratings-display
+                      class="rating-display"
+                      [stars]="location.reputation?.averageRating | ratingToStars"
+                      [count]="location.reputation?.ratings ?? 0"
+                    ></app-ratings-display>
+                  </div>
+                  <p class="card-text">
+                    {{
+                      location.description.length > 100
+                        ? (location.description | slice : 0 : 100) + '...'
+                        : location.description
+                    }}
+                  </p>
+                  <p class="card-text">
+                    {{ location.size }}m²<br />{{ location.plz?.plz }} {{ location.plz?.ort }}, {{ location.address }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </app-pageable>
+
+    <div class="mt-4">
+      <app-location-map
+        *ngIf="mode === enumMode.MAP"
+        [editable]="true"
+        [coord]="filter.position.coord"
+        (coord$)="onChangeCoord($event)"
+        [radiusSize]="filter.position.distance"
+        [zoom]="7"
+        [locations]="locations"
+        [showLocationPopup]="true"
+      ></app-location-map>
+    </div>
+  </div>
+</div>

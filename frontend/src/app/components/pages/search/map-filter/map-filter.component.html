@@ -1,0 +1,22 @@
+<div class="form-group mt-2">
+  <label for="position" class="fw-bold">Distanz in km</label>
+  <input
+    type="number"
+    class="form-control mb-2"
+    id="position"
+    name="position"
+    min="1"
+    [(ngModel)]="position.distance"
+    (keydown.enter)="keydownEnter.next($event)"
+  />
+  <app-location-map
+    *ngIf="!onlyDistance"
+    [editable]="true"
+    class="square-map"
+    [coord]="position.coord"
+    (coord$)="onChangeCoord($event)"
+    [radiusSize]="position.distance"
+    [zoom]="7"
+    [locations]="locations"
+  ></app-location-map>
+</div>

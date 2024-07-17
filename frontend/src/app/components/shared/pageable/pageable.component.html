@@ -1,0 +1,48 @@
+<div class="row">
+  <div class="col-sm-auto align-self-center">
+    <select class="form-select" (change)="onPageSizeChange(+$event.target.value)">
+      <option value="5" [selected]="pageSize === 5">5</option>
+      <option value="10" [selected]="pageSize === 10">10</option>
+      <option value="20" [selected]="pageSize === 20">20</option>
+    </select>
+  </div>
+  <div class="col">
+    <ngb-pagination
+      [collectionSize]="collectionSize"
+      [(page)]="page"
+      [maxSize]="5"
+      [rotate]="true"
+      [boundaryLinks]="true"
+      [pageSize]="pageSize"
+      (pageChange)="onPageChange($event)"
+      class="d-flex justify-content-end"
+    ></ngb-pagination>
+  </div>
+</div>
+
+<ng-template
+  [ngTemplateOutlet]="templateRef"
+  [ngTemplateOutletContext]="{ $implicit: { page, pageSize } }"
+></ng-template>
+
+<div class="row">
+  <div class="col-sm-auto align-self-center">
+    <select class="form-select" (change)="onPageSizeChange(+$event.target.value)">
+      <option value="5" [selected]="pageSize === 5">5</option>
+      <option value="10" [selected]="pageSize === 10">10</option>
+      <option value="20" [selected]="pageSize === 20">20</option>
+    </select>
+  </div>
+  <div class="col">
+    <ngb-pagination
+      [collectionSize]="collectionSize"
+      [(page)]="page"
+      [maxSize]="5"
+      [rotate]="true"
+      [boundaryLinks]="true"
+      [pageSize]="pageSize"
+      (pageChange)="onPageChange($event)"
+      class="d-flex justify-content-end"
+    ></ngb-pagination>
+  </div>
+</div>

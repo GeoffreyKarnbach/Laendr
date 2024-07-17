@@ -1,0 +1,29 @@
+::ng-deep .ngb-dp-day.disabled {
+  text-decoration: line-through;
+}
+
+::ng-deep .create-edit-popover-container .popover {
+  max-width: 100%;
+}
+
+.table-row > td {
+  vertical-align: middle;
+}
+
+.selected-row {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.box-shadow {
+  -webkit-box-shadow: 0 1px 1px rgba(72, 78, 85, 0.6);
+  box-shadow: 0 1px 1px rgba(72, 78, 85, 0.6);
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -ms-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+}
+
+.cursor {
+  cursor: pointer;
+}

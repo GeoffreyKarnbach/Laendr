@@ -1,0 +1,64 @@
+<div class="d-flex flex-row justify-content-around mb-2">
+    <div class="d-flex flex-column">
+      <div><label for="startTimepicker" class="form-label">Anfang</label></div>
+      <div class="border rounded p-2">
+        <div class="input-group date-picker mb-1">
+          <input
+            class="form-control"
+            placeholder="dd.mm.yyyy"
+            name="timeRangeTo"
+            [(ngModel)]="selectedDay"
+            ngbDatepicker
+            #startpicker="ngbDatepicker"
+            [disabled]="true"
+          />
+          <button
+            class="btn btn-outline-secondary bi bi-calendar3"
+            (click)="startpicker.toggle()"
+            type="button"
+            [disabled]="true"
+          ></button>
+        </div>
+        <ngb-timepicker id="startTimepicker" [size]="'small'" class="timeslot-timepicker" [(ngModel)]="startTime"></ngb-timepicker>
+      </div>
+    </div>
+    <div class="mx-2"></div>
+    <div class="d-flex flex-column">
+      <div><label for="endTimepicker" class="form-label">Ende</label></div>
+      <div class="border rounded p-2">
+        <div class="input-group date-picker mb-1">
+          <input
+            class="form-control"
+            placeholder="dd.mm.yyyy"
+            name="timeRangeTo"
+            [(ngModel)]="endDate"
+            ngbDatepicker
+            #endpicker="ngbDatepicker"
+          />
+          <button
+            class="btn btn-outline-secondary bi bi-calendar3"
+            (click)="endpicker.toggle()"
+            type="button"
+          ></button>
+        </div>
+        <ngb-timepicker id="endTimepicker" [size]="'small'" class="timeslot-timepicker" [(ngModel)]="endTime"></ngb-timepicker>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex flex-row justify-content-between">
+    <div>
+      <label for="price" class="form-label">Preis</label>
+      <input
+        type="number"
+        id="price"
+        [min]="0"
+        [(ngModel)]="timeslot.price"
+        class="form-control form-control-sm"
+      />
+    </div>
+    <div class="d-flex flex-column justify-content-end">
+      <button *ngIf="isPopoverInCreateMode" [disabled]="!inputValid()" (click)="createTimeslot()" class="btn btn-primary">Anlegen</button>
+      <button *ngIf="!isPopoverInCreateMode" [disabled]="!inputValid()" (click)="updateTimeslot()" class="btn btn-primary">Speichern</button>
+    </div>
+  </div>

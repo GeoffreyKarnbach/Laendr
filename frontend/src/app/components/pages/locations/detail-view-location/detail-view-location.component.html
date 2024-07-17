@@ -1,0 +1,125 @@
+<div class="columnContainer" style="margin-top: 1em">
+  <div id="right-column" class="rightMainColumn">
+    <div id="nameButtonDiv">
+      <div id="headerLine">
+        <h2 class="text-primary fw-bold" style="display: inline-block">
+          {{ location.name }}
+          <app-ratings-display
+            [stars]="location.reputation?.averageRating | ratingToStars"
+            [count]="location.reputation?.ratings || 0"
+            class="ms-1"
+          ></app-ratings-display>
+        </h2>
+      </div>
+
+      <div id="buttonDiv" style="margin-top: 0.75em" *ngIf="location.callerIsOwner">
+        <button type="button" class="btn btn-primary" [routerLink]="['edit']">Bearbeiten</button>
+        <button type="button" class="btn btn-primary" style="margin-left: 0.25em" [routerLink]="['image-edit']">
+          Bilder Bearbeiten
+        </button>
+        <button type="button" class="btn btn-outline-danger" style="margin-left: 0.25em" (click)="removeLocation()">
+          Löschen
+        </button>
+      </div>
+    </div>
+
+    <div id="locationDescription" class="mt-2">
+      <p class="mb-1">
+        {{ location.description }}
+      </p>
+      <div id="locationTags">
+        <app-tag *ngFor="let tag of location.tags" [tagname]="tag"></app-tag>
+      </div>
+    </div>
+
+    <hr />
+    <div class="row">
+      <div class="col-3 text-end">
+        <strong>Vermieter</strong>
+      </div>
+      <div class="col-9">
+        <span>
+          <a [routerLink]="['/lender', location.lender?.id]" class="link-primary me-2"> {{ location.lender?.name }}</a>
+          <app-ratings-display
+            [stars]="location.lender?.reputation?.averageRating | ratingToStars"
+            [count]="location.lender?.reputation?.ratings ?? 0"
+          ></app-ratings-display></span
+        ><br />
+        <span
+          ><a href="mailto:{{ location.lender?.email }}">{{ location.lender?.email }} </a></span
+        ><br />
+        <span
+          ><a href="tel:{{ location.lender?.phone }}">{{ location.lender?.phone }}</a></span
+        ><br />
+      </div>
+    </div>
+
+    <hr />
+    <div class="row">
+      <div class="col-3 text-end">
+        <strong>Addresse</strong>
+      </div>
+      <div class="col-4">
+        <span> {{ location.address }}</span
+        ><br />
+        <span> {{ location.plz.plz }} {{ location.plz.ort }} </span><br />
+        <span> {{ location.state | enumIntToDescription }} </span><br />
+      </div>
+      <div class="col-1 text-end">
+        <strong>Größe</strong>
+      </div>
+      <div class="col-4">
+        <span> {{ location.size }} m<sup>2</sup></span>
+      </div>
+    </div>
+
+    <hr />
+  </div>
+
+  <div id="left-column" class="leftMainColumn">
+    <app-image-view-location />
+  </div>
+</div>
+
+<ul class="nav nav-tabs mb-3">
+  <li class="nav-item">
+    <span
+      role="button"
+      class="nav-link"
+      [class.active]="activeTab === enumTabs.TIMESLOTS"
+      (click)="activeTab = enumTabs.TIMESLOTS"
+      (keydown.enter)="activeTab = enumTabs.TIMESLOTS"
+      tabindex="0"
+      >Zeitfenster</span
+    >
+  </li>
+  <li class="nav-item">
+    <span
+      role="button"
+      class="nav-link"
+      [class.active]="activeTab === enumTabs.REVIEWS"
+      (click)="activeTab = enumTabs.REVIEWS"
+      (keydown.enter)="activeTab = enumTabs.REVIEWS"
+      tabindex="0"
+      >Bewertungen & Karte</span
+    >
+  </li>
+</ul>
+
+<app-timeslot
+  [style.display]="activeTab === enumTabs.TIMESLOTS ? 'block' : 'none'"
+  [locationId]="location.id"
+  [callerIsLocationOwner]="location.callerIsOwner"
+></app-timeslot>
+
+<div [style.display]="activeTab === enumTabs.REVIEWS ? 'flex' : 'none'" class="row">
+  <div class="col-6">
+    <div>
+      <h4>Bewertungen<a id="a-reviews"></a></h4>
+      <app-review-view-location />
+    </div>
+  </div>
+  <div class="col-6">
+    <app-location-map *ngIf="location.coord" [coord]="location.coord"></app-location-map>
+  </div>
+</div>

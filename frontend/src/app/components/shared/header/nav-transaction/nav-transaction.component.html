@@ -1,0 +1,87 @@
+<ul class="navbar-nav mr-5">
+  <li class="nav-item">
+    <a
+      class="nav-link"
+      routerLink="/transaction"
+      [queryParams]="{ status: enumStatus.ACTIVE, role: isLender() ? enumRole.ROLE_LENDER : enumRole.ROLE_RENTER }"
+      >Transaktionen</a
+    >
+  </li>
+  <li class="nav-item dropdown">
+    <a class="nav-link icon-wrapper cursor" role="button" data-bs-toggle="dropdown" title="Transaktions-Nachrichten"
+      ><i class="bi bi-bell icon-color"></i>
+      <div class="notification" *ngIf="isNotifications"></div
+    ></a>
+    <ul class="dropdown-menu transaction-dropdown" [class.pt-0]="isLender()" *ngIf="isNotifications; else noNotifications">
+      <li *ngIf="isLender() && isRenterNotifications">
+        <h5 class="dropdown-heading">Mieter</h5>
+      </li>
+      <li *ngIf="isRenterNotifications">
+        <a
+          class="dropdown-item"
+          routerLink="/transaction"
+          [queryParams]="{ status: enumStatus.CANCELLED, role: enumRole.ROLE_RENTER }"
+          *ngIf="cancelledAndNotNotifiedAmountForRenter"
+        >
+          <span *ngIf="cancelledAndNotNotifiedAmountForRenter === 1; else moreThanOneCancelledRenter"
+            >Es wurde 1 Transaktion abgebrochen!</span
+          >
+          <ng-template #moreThanOneCancelledRenter>
+            Es wurden {{ cancelledAndNotNotifiedAmountForRenter }} Transaktionen abgebrochen!
+          </ng-template>
+        </a>
+      </li>
+      <li *ngIf="isRenterNotifications">
+        <a
+          class="dropdown-item"
+          routerLink="/transaction"
+          [queryParams]="{ status: enumStatus.COMPLETED, role: enumRole.ROLE_RENTER }"
+          *ngIf="amountToReviewForRenter"
+          ><span *ngIf="amountToReviewForRenter === 1; else moreThanOneToReviewRenter"
+            >1 Transaktion ist zu bewerten!</span
+          >
+          <ng-template #moreThanOneToReviewRenter>
+            {{ amountToReviewForRenter }} Transaktionen sind zu bewerten!
+          </ng-template></a
+        >
+      </li>
+      <li *ngIf="isLender() && isLenderNotifications && isRenterNotifications"><hr class="dropdown-divider" /></li>
+      <li *ngIf="isLender() && isLenderNotifications">
+        <h5 class="dropdown-heading">Vermieter</h5>
+      </li>
+      <li *ngIf="isLender() && isLenderNotifications">
+        <a
+          class="dropdown-item"
+          routerLink="/transaction"
+          [queryParams]="{ status: enumStatus.CANCELLED, role: enumRole.ROLE_LENDER }"
+          *ngIf="cancelledAndNotNotifiedAmountForLender"
+          ><span *ngIf="cancelledAndNotNotifiedAmountForLender === 1; else moreThanOneCancelledRenter"
+            >Es wurde 1 Transaktion abgebrochen!</span
+          >
+          <ng-template #moreThanOneCancelledRenter>
+            Es wurden {{ cancelledAndNotNotifiedAmountForLender }} Transaktionen abgebrochen!
+          </ng-template></a
+        >
+      </li>
+      <li *ngIf="isLender() && isLenderNotifications">
+        <a
+          class="dropdown-item"
+          routerLink="/transaction"
+          [queryParams]="{ status: enumStatus.COMPLETED, role: enumRole.ROLE_LENDER }"
+          *ngIf="amountToReviewForLender"
+          ><span *ngIf="amountToReviewForLender === 1; else moreThanOneToReviewLender"
+            >1 Transaktion ist zu bewerten!</span
+          >
+          <ng-template #moreThanOneToReviewLender>
+            {{ amountToReviewForLender }} Transaktionen sind zu bewerten!
+          </ng-template></a
+        >
+      </li>
+    </ul>
+    <ng-template #noNotifications>
+      <div class="dropdown-menu py-0">
+        <div class="card border-0 text-nowrap"><div class="card-body">Keine Mitteilungen</div></div>
+      </div>
+    </ng-template>
+  </li>
+</ul>

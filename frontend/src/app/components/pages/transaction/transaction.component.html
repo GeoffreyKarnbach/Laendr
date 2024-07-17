@@ -1,0 +1,156 @@
+<div *ngIf="shouldShowCancelWarning" class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+  Diese Transaktion wurde vom Transaktionspartner abgebrochen!
+  <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="alert"
+    aria-label="Close"
+    (click)="onClickCancelWarning()"
+  ></button>
+</div>
+
+<h1 class="mt-4">
+  Transaktion für
+  <a
+    *ngIf="!transaction?.locationRemoved; else cancelledElseBlock"
+    [routerLink]="['/location', transaction?.locationId]"
+    class="link-primary"
+    >{{ transaction?.locationName }}</a
+  >
+  <ng-template #cancelledElseBlock>{{ transaction?.locationName }}</ng-template>
+</h1>
+
+<h4>Status: {{ getTransactionStatus() }}</h4>
+
+Beteiligt als {{ getRoleText() }} seit {{ transaction?.createdAt | date : 'dd.MM.yyyy HH:mm' }}
+
+<div class="row mt-4 pt-2 border-top">
+  <div class="col-7">
+    <h3>Inhalt</h3>
+    <div>Von: {{ transaction?.timeslot.start | date : 'dd.MM.yyyy HH:mm' }}</div>
+    <div>Bis: {{ transaction?.timeslot.end | date : 'dd.MM.yyyy HH:mm' }}</div>
+    <div>Vereinbarter Betrag: {{ transaction?.totalConcerned.toFixed(2) }}€</div>
+    <div *ngIf="transaction?.completedAt != null">Bezahlter Betrag: {{ getPaidAmount().toFixed(2) }}€</div>
+    <h5 class="mt-2">Initiale Nachricht:</h5>
+    <div>{{ transaction?.initialMessage }}</div>
+  </div>
+
+  <div class="col-5">
+    <h3>{{ getPartnerRoleText() }}-Informationen</h3>
+    <div>
+      Name:
+      <a [routerLink]="['/lender', transaction?.lenderId]" class="link-primary" *ngIf="isNotLender(); else isLender">
+        {{ transaction?.partnerName }}</a
+      >
+      <ng-template #isLender>
+        {{ transaction?.partnerName }}
+      </ng-template>
+      <app-ratings-display
+        class="rating-display ms-2"
+        [stars]="transaction?.partnerReputation?.averageRating | ratingToStars"
+        [count]="transaction?.partnerReputation?.ratings ?? 0"
+      ></app-ratings-display>
+    </div>
+    <div *ngIf="transaction?.partnerEmail">
+      Email: <a href="mailto: {{ transaction?.partnerEmail }}">{{ transaction?.partnerEmail }}</a>
+    </div>
+    <div *ngIf="transaction?.partnerPhone">
+      Telefon: <a href="tel: {{ transaction?.partnerPhone }}">{{ transaction?.partnerPhone }}</a>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="transaction?.cancelled">
+  <h3 class="mt-4 pt-2 border-top">Abbruchs-Informationen</h3>
+  <div>Abgebrochen von: {{ getCancelByRoleText() }}</div>
+  <div>Grund: {{ getCancelReason() }}</div>
+  <div class="text-muted">{{ transaction?.cancelDescription }}</div>
+</div>
+
+<div *ngIf="transaction?.completedAt != null">
+  <h3 class="mt-4 pt-2 border-top">Bewertungen</h3>
+  <div class="row">
+    <div class="col">
+      <div *ngIf="transaction?.reviewRenter; else hasNoReviewRenter" class="card">
+        <div class="card-body">
+          <h5 class="card-title">Bewertung des Mieters</h5>
+          <h6 class="card-subtitle mb-2 text-muted">
+            {{ transaction?.reviewRenter.createdAt | date : 'dd.MM.yyyy HH:mm' }}
+          </h6>
+          <div class="position-absolute top-0 end-0 pe-4 pt-3">
+            <app-ratings-display
+              [stars]="transaction?.reviewRenter?.rating | ratingToStars"
+              [showCount]="false"
+              style="margin-left: 0.5em"
+            ></app-ratings-display>
+          </div>
+          <p class="card-text">{{ transaction?.reviewRenter.comment }}</p>
+        </div>
+      </div>
+      <ng-template #hasNoReviewRenter>
+        <div *ngIf="!isNotLender()">
+          <h5>Bewerten Sie den Mieter:</h5>
+          <app-create-review (reviewSubmitted)="sendRenterReview($event)"></app-create-review>
+        </div>
+      </ng-template>
+    </div>
+
+    <div class="col">
+      <div *ngIf="transaction?.reviewLocation; else hasNoReviewLocation" class="card">
+        <div class="card-body">
+          <h5 class="card-title">Bewertung der Location</h5>
+          <h6 class="card-subtitle mb-2 text-muted">
+            {{ transaction?.reviewLocation.createdAt | date : 'dd.MM.yyyy HH:mm' }}
+          </h6>
+          <div class="position-absolute top-0 end-0 pe-4 pt-3">
+            <app-ratings-display
+              [stars]="transaction?.reviewLocation?.rating | ratingToStars"
+              [showCount]="false"
+              style="margin-left: 0.5em"
+            ></app-ratings-display>
+          </div>
+          <p class="card-text">{{ transaction?.reviewLocation.comment }}</p>
+        </div>
+      </div>
+      <ng-template #hasNoReviewLocation>
+        <div *ngIf="isNotLender()">
+          <h5>Bewerten Sie die Location:</h5>
+          <app-create-review (reviewSubmitted)="sendLocationReview($event)"></app-create-review>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>
+
+<div id="transaction_completion_div" style="margin-top: 2em" *ngIf="displayCompletitionDiv()">
+  <hr />
+  <input
+    type="number"
+    id="price_prompt"
+    [(ngModel)]="pricePromptValue"
+    *ngIf="showPricePrompt"
+    style="margin-right: 0.25em"
+    min="0"
+    max="10000"
+    step="1.00"
+  />
+  <button type="button" class="btn btn-primary" (click)="onClickCompletition()">{{ getCompletionButtonText() }}</button>
+</div>
+
+<div id="transaction_cancelation_div" style="margin-top: 2em" *ngIf="displayCancelationDiv()">
+  <hr />
+  <div *ngIf="showCancelReason">
+    <label for="cancel_reason_select" style="margin-right: 0.5em">Grund für Abbruch: </label>
+    <select name="cancel_reason_select" id="cancel_reason_select" [(ngModel)]="selectedCancelReason">
+      <option value="{{ item.key }}" *ngFor="let item of reasonToDisplayText | keyvalue">{{ item.value }}</option>
+    </select>
+    <br />
+    <textarea [(ngModel)]="cancelReason" style="margin: 0.5em 0.5em 0.5em 0; width: 30em"></textarea>
+    <br />
+  </div>
+  <button type="button" class="btn btn-danger" (click)="onClickCancel()">{{ getCancelationButtonText() }}</button>
+</div>
+
+<div id="transaction_accept_div" style="margin-top: 2em" *ngIf="showAcceptButton()">
+  <button type="button" class="btn btn-primary" (click)="acceptTransaction()">Transaktion akzeptieren</button>
+</div>

@@ -1,0 +1,89 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top shadow-sm">
+  <div class="container">
+    <a class="navbar-brand" routerLink="/">
+      <img src="/assets/logo.svg" />
+    </a>
+    <button
+      class="navbar-toggler ml-5"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-2 mr-5 w-100">
+        <form class="d-flex flex-grow-1" role="search">
+          <div class="input-group ms-1 me-1">
+            <input
+              type="search"
+              name="search"
+              class="form-control bg-light text-dark search-text-input"
+              aria-label="Search"
+              placeholder="Ländr durchsuchen..."
+              [(ngModel)]="searchString"
+              (keydown.enter)="onClickSearch()"
+            />
+            <button type="button" class="btn btn-outline-primary" (click)="onClickSearch()">
+              <i class="bi bi-search"></i>
+            </button>
+          </div>
+        </form>
+
+        <li class="nav-item">
+          <a
+            class="nav-link cursor"
+            *ngIf="isLender()"
+            [routerLink]="['lender', authService.getUserInfo()?.id]"
+            routerLinkActive="active"
+          >
+            Meine Locations
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/location/create" *ngIf="isLender()">Neue Location</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" *ngIf="isAdmin()" routerLink="/ratings" routerLinkActive="active">Bewertungen</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" *ngIf="isAdmin()" routerLink="/admin/user" routerLinkActive="active">User Verwaltung</a>
+        </li>
+
+        <app-nav-transaction *ngIf="authService.isLoggedIn()"></app-nav-transaction>
+
+        <li class="nav-item">
+          <a
+            class="nav-link cursor"
+            *ngIf="authService.isLoggedIn()"
+            [routerLink]="['user', authService.getUserInfo()?.id]"
+            routerLinkActive="active"
+          >
+            <i class="bi bi-person-fill icon-color"></i>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" *ngIf="!authService.isLoggedIn()" routerLink="/login" routerLinkActive="active">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" *ngIf="!authService.isLoggedIn()" routerLink="/signup" routerLinkActive="active"
+            >Registrieren</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/" (click)="authService.logoutUser()">
+            Logout
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

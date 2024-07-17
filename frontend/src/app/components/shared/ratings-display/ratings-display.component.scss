@@ -1,0 +1,16 @@
+.starbox {
+	display: inline-flex;
+	flex-direction: row;
+	align-items: baseline;
+}
+.starbox-small {
+	font-size: 0.7em;
+}
+.starbox > i {
+	margin-left: 1px;
+	margin-right: 1px;
+}
+.reviewcount {
+	margin-left: 5px;
+	font-size: 0.7em;
+}

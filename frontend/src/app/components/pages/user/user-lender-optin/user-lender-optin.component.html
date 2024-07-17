@@ -1,0 +1,27 @@
+<div *ngIf="userId" class="d-flex flex-row justify-content-evenly">
+  <div class="flex-grow-1"></div>
+  <div class="flex-shrink-1">
+    <h1 class="fs-2">Vermieter werden</h1>
+    <p>
+      Als Vermieter können Sie Locations erstellen, verwalten und vermieten.
+      Die Teilnahme ist nur einen Klick entfernt:
+    </p>
+    <div class="d-flex flex-row justify-content-evenly mt-4">
+      <div class="flex-grow-1"></div>
+      <button type="button"
+              class="btn btn-primary ps-5 pe-5 flex-shrink-1"
+              (click)="becomeLender()"
+              >
+        Vermieter werden
+      </button>
+      <div class="flex-grow-1"></div>
+    </div>
+    <p class="text-center text-secondary lenderbtn-info mt-1">
+      <i>
+        Bitte beachten Sie, dass dies eine permanente Änderung Ihres Accounts
+        darstellt und nicht rückgängig gemacht werden kann.
+      </i>
+    </p>
+  </div>
+  <div class="flex-grow-1"></div>
+</div>

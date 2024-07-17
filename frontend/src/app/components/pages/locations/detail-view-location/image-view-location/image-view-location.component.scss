@@ -1,0 +1,18 @@
+::ng-deep .carousel-control-prev-icon{
+  background-image: url('/assets/chevron-left.svg');
+}
+::ng-deep .carousel-control-next-icon{
+  background-image: url('/assets/chevron-right.svg');
+}
+
+::ng-deep .carousel-indicators .active {
+  background-color: black;
+}
+
+::ng-deep .carousel-indicators [data-bs-target] {
+  background-color: black;
+}
+
+::ng-deep .hide-arrows .carousel-control-next, ::ng-deep .hide-arrows .carousel-control-prev {
+  display: none;
+}

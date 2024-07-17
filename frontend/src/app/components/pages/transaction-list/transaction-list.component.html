@@ -1,0 +1,109 @@
+<ul class="nav nav-tabs my-2" *ngIf="isLender()">
+  <li class="nav-item">
+    <a
+      class="nav-link"
+      [class.active]="role === enumRole.ROLE_LENDER"
+      [routerLink]="[]"
+      [queryParams]="{ status, role: enumRole.ROLE_LENDER }"
+      >{{ enumToDisplayRole[enumRole.ROLE_LENDER] }} ({{
+        totalAmount[enumRole.ROLE_LENDER][enumStatus.ACTIVE] +
+          totalAmount[enumRole.ROLE_LENDER][enumStatus.ACCEPTED] +
+          totalAmount[enumRole.ROLE_LENDER][enumStatus.COMPLETED] +
+          totalAmount[enumRole.ROLE_LENDER][enumStatus.REVIEWED] +
+          totalAmount[enumRole.ROLE_LENDER][enumStatus.CANCELLED]
+      }})</a
+    >
+  </li>
+  <li class="nav-item">
+    <a
+      class="nav-link"
+      [class.active]="role === enumRole.ROLE_RENTER"
+      [routerLink]="[]"
+      [queryParams]="{ status, role: enumRole.ROLE_RENTER }"
+      >{{ enumToDisplayRole[enumRole.ROLE_RENTER] }} ({{
+        totalAmount[enumRole.ROLE_RENTER][enumStatus.ACTIVE] +
+          totalAmount[enumRole.ROLE_RENTER][enumStatus.ACCEPTED] +
+          totalAmount[enumRole.ROLE_RENTER][enumStatus.COMPLETED] +
+          totalAmount[enumRole.ROLE_RENTER][enumStatus.REVIEWED] +
+          totalAmount[enumRole.ROLE_RENTER][enumStatus.CANCELLED]
+      }})</a
+    >
+  </li>
+</ul>
+
+<ul class="nav nav-tabs" [class.mt-2]="!isLender()">
+  <li class="nav-item">
+    <a
+      class="nav-link"
+      [class.active]="status === enumStatus.ACTIVE"
+      [routerLink]="[]"
+      [queryParams]="{ status: enumStatus.ACTIVE, role }"
+      >{{ enumToDisplayStatus[enumStatus.ACTIVE] }} ({{ totalAmount[role][enumStatus.ACTIVE] }})</a
+    >
+  </li>
+  <li class="nav-item">
+    <a
+      class="nav-link"
+      [class.active]="status === enumStatus.ACCEPTED"
+      [routerLink]="[]"
+      [queryParams]="{ status: enumStatus.ACCEPTED, role }"
+      >{{ enumToDisplayStatus[enumStatus.ACCEPTED] }} ({{ totalAmount[role][enumStatus.ACCEPTED] }})</a
+    >
+  </li>
+  <li>
+    <a
+      class="nav-link"
+      [class.active]="status === enumStatus.COMPLETED"
+      [routerLink]="[]"
+      [queryParams]="{ status: enumStatus.COMPLETED, role }"
+      >{{ enumToDisplayStatus[enumStatus.COMPLETED] }} ({{ totalAmount[role][enumStatus.COMPLETED] }})</a
+    >
+  </li>
+  <li>
+    <a
+      class="nav-link"
+      [class.active]="status === enumStatus.REVIEWED"
+      [routerLink]="[]"
+      [queryParams]="{ status: enumStatus.REVIEWED, role }"
+      >{{ enumToDisplayStatus[enumStatus.REVIEWED] }} ({{ totalAmount[role][enumStatus.REVIEWED] }})</a
+    >
+  </li>
+  <li>
+    <a
+      class="nav-link"
+      [class.active]="status === enumStatus.CANCELLED"
+      [routerLink]="[]"
+      [queryParams]="{ status: enumStatus.CANCELLED, role }"
+      >{{ enumToDisplayStatus[enumStatus.CANCELLED] }} ({{ totalAmount[role][enumStatus.CANCELLED] }})</a
+    >
+  </li>
+</ul>
+
+<div
+  *ngIf="cancelledAndNotNotified.length > 0 && status === enumStatus.CANCELLED"
+  class="alert alert-warning alert-dismissible fade show mt-3"
+  role="alert"
+>
+  <span *ngIf="cancelledAndNotNotified.length === 1; else moreThanOneCancelled"
+    >Es wurde 1 Transaktion abgebrochen!</span
+  >
+  <ng-template #moreThanOneCancelled>
+    Es wurden {{ cancelledAndNotNotified.length }} Transaktionen abgebrochen!
+  </ng-template>
+
+  <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="alert"
+    aria-label="Close"
+    (click)="onClickCancelWarning()"
+  ></button>
+</div>
+
+<app-pageable [collectionSize]="totalAmount[role][status]" (pageChange)="onPageChange($event)" [page]="page + 1">
+  <ng-template let-pageInfo>
+    <div *ngFor="let transaction of transactions">
+      <app-transaction-item *ngIf="!isLoading" [transaction]="transaction"></app-transaction-item>
+    </div>
+  </ng-template>
+</app-pageable>

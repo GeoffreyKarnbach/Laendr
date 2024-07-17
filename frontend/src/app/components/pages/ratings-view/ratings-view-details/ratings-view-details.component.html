@@ -1,0 +1,56 @@
+<div *ngIf="details"
+     class="mt-2"
+     >
+  <h2>
+    Reputationsberechnung
+    <button type="button" class="btn btn-outline-primary btn-sm ms-2"
+            (click)="updateDetails();"
+            >
+      Neu berechnen
+    </button>
+  </h2>
+  <p *ngIf="details.reviews.length == 0">
+    <i>Keine relevanten Reviews vorhanden</i>
+  </p>
+  <div ngbAccordion [closeOthers]="true">
+    <div ngbAccordionItem
+         *ngFor="let review of details.reviews"
+         >
+      <h2 ngbAccordionHeader>
+        <button ngbAccordionButton>
+          Review von {{ getReviewerKind() }}
+          {{ review.reviewerId }} vom
+          {{ review.reviewDate | date:"dd.MM.yyyy HH:mm:ss" }}
+          (<span class="text-weight-positive">
+            <b>+</b>{{ review.positiveBaseWeight }}
+          </span>,
+          <span class="text-weight-negative">
+            <b>-</b>{{ review.negativeBaseWeight }}
+          </span>)
+        </button>
+      </h2>
+      <div ngbAccordionCollapse>
+        <div ngbAccordionBody>
+          <ng-template>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Gewichtungsfaktor</th>
+                  <th scope="col">Parameter</th>
+                  <th scope="col">Gewichtung</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let discount of review.discounts">
+                  <td>{{ discount.name }}</td>
+                  <td class="font-monospace">{{ discount.parameters }}</td>
+                  <td>{{ discount.discount | number:"1.4-4" }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

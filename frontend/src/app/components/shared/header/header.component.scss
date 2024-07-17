@@ -1,0 +1,21 @@
+input[type="search"], textarea {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.cursor {
+  cursor: pointer;
+}
+
+.navbar-brand {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.navbar-brand > img {
+  height: 1.5em;
+  margin-bottom: 0.2em;
+}
+
+#navbarSupportedContent {
+  margin-top: 5px;
+}

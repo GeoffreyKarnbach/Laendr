@@ -1,0 +1,17 @@
+<h2>
+  <div class="d-flex flex-row justify-content-between">
+    <div class="starbox text-dark">
+      <i
+        *ngFor="let i of [0, 1, 2, 3, 4]"
+        (click)="review.rating = i"
+        [class]="review.rating < i ? 'bi-star' : 'bi-star-fill'"
+      >
+      </i>
+    </div>
+    <button class="btn btn-primary" (click)="submit()">Absenden</button>
+  </div>
+</h2>
+<div class="form-floating">
+  <textarea id="floatingTextarea" class="form-control" [(ngModel)]="review.comment" [maxLength]="200"></textarea>
+  <label for="floatingTextarea">Was hat dir gefallen oder missfallen?</label>
+</div>

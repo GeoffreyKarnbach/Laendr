@@ -1,0 +1,8 @@
+<div *ngIf="isEditable" class="d-inline-block me-3">
+  <span class="badge badge-secondary p-2 ms-0"> {{tagname}} </span>
+  <button type="button" class="btn btn-light btn-sm" (click)="deleteTag()">
+    <i class="bi-trash"></i>
+  </button>
+</div>
+
+<span class="badge badge-secondary" *ngIf="!isEditable"> {{tagname}} </span>

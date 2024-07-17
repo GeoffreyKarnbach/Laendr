@@ -1,0 +1,13 @@
+.map-container{
+  width: 100%;
+  height: 500px;
+}
+
+:host-context(.square-map) .map-container {
+  aspect-ratio: 1 / 1;
+  height: auto !important;
+}
+
+:host-context(.full-height) .map-container {
+  height: 100% !important;
+}

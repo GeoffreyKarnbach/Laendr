@@ -1,0 +1,27 @@
+$leftCol: 51%;
+
+.leftMainColumn {
+  flex: $leftCol;
+  margin-left: 1em;
+}
+
+.rightMainColumn {
+  flex: 100% - $leftCol;
+  margin-left: 1em;
+}
+
+.secondaryColumns {
+  flex: 50%;
+}
+
+.leftTernaryColumns {
+  flex: 35%;
+}
+
+.rightTernaryColumns {
+  flex: 65%;
+}
+
+.columnContainer {
+  display: flex;
+}

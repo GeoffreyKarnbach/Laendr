@@ -1,0 +1,24 @@
+<div class="card box-shadow cursor" style="width: 300px; border: none">
+  <div class="row no-gutters" style="flex-wrap: nowrap">
+    <div class="col-auto d-flex rounded-start">
+      <img
+        [src]="location.primaryImageUrl"
+        class="img-fluid rounded-start"
+        style="max-width: 100px; max-height: 100px"
+        alt=""
+      />
+    </div>
+    <div class="col ps-1" style="height: 100px">
+      <div class="card-block px-2">
+        <h6 class="card-title">{{ location.name }}</h6>
+        <app-ratings-display
+          [stars]="location.reputation?.averageRating | ratingToStars"
+          [count]="location.reputation?.ratings || 0"
+          [small]="false"
+          [textClass]="'fs-6'"
+        ></app-ratings-display>
+      </div>
+    </div>
+  </div>
+  <button type="button" class="btn btn-primary mt-2" (click)="onClickOpen()">Öffnen</button>
+</div>

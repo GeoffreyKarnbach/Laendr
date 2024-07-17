@@ -1,0 +1,17 @@
+<div>
+  <div class="image-header" style="display:inline-flex; justify-content: space-between;width: 200px;margin-bottom: 0.25rem;">
+      <b>{{imagePosition}}</b>
+      <button type="button" class="btn btn-light" *ngIf="imagePosition!==1" (click)="moveImageLeft()">
+        <i class="bi-chevron-left"></i>
+      </button>
+      <button type="button" class="btn btn-light" *ngIf="imagePosition!==totalImageNumber" (click)="moveImageRight()">
+        <i class="bi-chevron-right"></i>
+      </button>
+      <button type="button" class="btn btn-light" (click)="deleteImage()">
+        <i class="bi-trash"></i>
+      </button>
+  </div>
+  <div class="image-body">
+    <img src="{{imageUrl}}" alt="image" class="{{getPrimaryStyle()}}">
+  </div>
+</div>

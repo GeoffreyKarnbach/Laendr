@@ -1,0 +1,21 @@
+<div *ngIf="sumSancelledAndNotNotified() > 0" class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+  <span *ngIf="sumSancelledAndNotNotified() === 1; else moreThanOneCancelled">Es wurde 1 Transaktion abgebrochen!</span>
+  <ng-template #moreThanOneCancelled>
+    Es wurden {{ sumSancelledAndNotNotified() }} Transaktionen
+    <span *ngIf="isLender()"
+      >({{ cancelledAndNotNotified[enumRole.ROLE_RENTER].length }} für Mieter,
+      {{ cancelledAndNotNotified[enumRole.ROLE_LENDER].length }} für Vermieter)</span
+    >
+    abgebrochen!
+  </ng-template>
+
+  <button
+    type="button"
+    class="btn btn-primary position-absolute top-50 end-0 translate-middle-y me-3"
+    data-bs-dismiss="alert"
+    aria-label="Close"
+    (click)="onClickCancelWarning()"
+  >
+    Zu Transaktionen
+  </button>
+</div>

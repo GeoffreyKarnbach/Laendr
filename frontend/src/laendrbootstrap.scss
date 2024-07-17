@@ -1,0 +1,25 @@
+$primary: #55AA00;
+$success: #46851C;
+$danger: #CD0E6D;
+$warning: #FFBC7D;
+$info: #06CFD2;
+
+$border-radius: 0.25rem;
+$input-btn-focus-width: 0.2rem;
+$input-btn-focus-blur: 0.1rem;
+
+$btn-padding-x: 0.75rem / 2;
+$btn-padding-y: 0.375rem / 2;
+
+$input-padding-x: 0.75rem / 2;
+$input-padding-y: 0.375rem / 2;
+
+.search-text-input {
+  padding: 0.375rem 0.75rem !important;
+}
+
+nav a {
+  white-space: nowrap;
+}
+
+@import "../node_modules/bootstrap/scss/bootstrap";

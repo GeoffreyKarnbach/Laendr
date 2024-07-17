@@ -1,0 +1,175 @@
+<h1 class="mt-3">{{ headerTitle }}</h1>
+
+<form #form="ngForm" (ngSubmit)="onSubmit(form)">
+  <div class="row">
+    <div class="mb-2 col-lg-6">
+      <div class="row">
+        <label for="locationName" class="col-form-label text-md-end text-muted col-md-2 col-lg-4"> Name </label>
+        <div class="col-md-10 col-lg-8">
+          <input
+            type="text"
+            id="locationName"
+            name="locationName"
+            placeholder="Location Name"
+            class="form-control"
+            [class]="dynamicCssClassesForInput(locationNameModel)"
+            [(ngModel)]="location.name"
+            #locationNameModel="ngModel"
+            required
+          />
+          <div class="invalid-feedback">Name ist notwendig</div>
+        </div>
+      </div>
+    </div>
+    <div class="mb-2 col-lg-6">
+      <div class="row">
+        <label for="locationSize" class="col-form-label text-md-end text-muted col-md-2 col-lg-4"> Größe </label>
+        <div class="col-md-10 col-lg-8">
+          <input
+            type="number"
+            id="locationSize"
+            name="locationSize"
+            class="form-control"
+            [class]="dynamicCssClassesForInput(locationSizeModel)"
+            [(ngModel)]="location.size"
+            #locationSizeModel="ngModel"
+            min="0"
+            max="1000000"
+            step="1"
+            required
+          />
+          <div class="invalid-feedback">Größe ist notwendig</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="mb-2 col-lg-6">
+      <div class="row">
+        <label for="locationPlz" class="col-form-label text-md-end text-muted col-md-2 col-lg-4"> PLZ </label>
+        <div class="col-md-10 col-lg-8">
+          <input
+            type="text"
+            id="locationPlz"
+            name="locationPlz"
+            class="form-control"
+            [class]="dynamicCssClassesForInput(locationPlzModel)"
+            [(ngModel)]="location.plz.plz"
+            (ngModelChange)="plzInputChange.next($event)"
+            #locationPlzModel="ngModel"
+            required
+            list="plz-suggestions"
+          />
+          <datalist id="plz-suggestions">
+            <option *ngFor="let plz of plzSuggestions" [value]="plz.plz"></option>
+          </datalist>
+
+          <div class="invalid-feedback">PLZ ist notwendig</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-2 col-lg-6">
+      <div class="row">
+        <label for="locationState" class="col-form-label text-md-end text-muted col-md-2 col-lg-4"> Bundesland </label>
+        <div class="col-md-10 col-lg-8">
+          <select class="form-select" id="locationState" name="locationState" [(ngModel)]="location.state" required>
+            <option value="W">Wien</option>
+            <option value="NOE">Niederösterreich</option>
+            <option value="OOE">Oberösterreich</option>
+            <option value="BGLD">Burgenland</option>
+            <option value="KTN">Kärnten</option>
+            <option value="SBG">Salzburg</option>
+            <option value="STMK">Steiermark</option>
+            <option value="T">Tirol</option>
+            <option value="VBG">Vorarlberg</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="mb-2 col-lg-6">
+      <div class="row">
+        <label for="locationAddress" class="col-form-label text-md-end text-muted col-md-2 col-lg-4"> Addresse </label>
+        <div class="col-md-10 col-lg-8">
+          <input
+            type="text"
+            id="locationAddress"
+            name="locationAddress"
+            class="form-control"
+            [class]="dynamicCssClassesForInput(locationAddressModel)"
+            [(ngModel)]="location.address"
+            #locationAddressModel="ngModel"
+            required
+          />
+          <div class="invalid-feedback">Addresse ist notwendig</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-2">
+    <label for="locationDescription" class="col-form-label text-md-end text-md-end text-muted col-md-2">
+      Beschreibung
+    </label>
+    <div class="col-md-10">
+      <textarea
+        class="form-control"
+        id="locationDescription"
+        name="locationDescription"
+        rows="5"
+        [(ngModel)]="location.description"
+      >
+      </textarea>
+    </div>
+  </div>
+
+  <div class="row mb-2">
+    <label for="locationSelectedTag" class="col-form-label text-md-end text-muted col-md-2"> Tags </label>
+    <div class="col-md-4">
+      <select class="form-select" id="locationSelectedTag" name="locationSelectedTag" [(ngModel)]="selectedTag">
+        <option *ngFor="let tag of tags | keyvalue" [value]="tag.id" [ngValue]="tag.value">{{ tag.value }}</option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <button type="button" class="btn btn-primary" (click)="onTagAdded()">
+        <i class="bi bi-plus-circle"></i>
+      </button>
+    </div>
+    <div class="col-md-4">
+      <div class="d-flex flex-row">
+        <span class="flex-grow-1"></span>
+        <button type="submit" class="btn btn-primary" [disabled]="!form.valid" type="submit">
+          {{ submitButtonText }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-2">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+      <app-tag
+        *ngFor="let tag of location.tags; let i = index"
+        style="display: inline-block"
+        [tagname]="tag"
+        [isEditable]="true"
+        [position]="i + 1"
+        [totalTagNumber]="location.tags.length"
+        (moveTagLeftEvent)="moveTagLeft($event)"
+        (moveTagRightEvent)="moveTagRight($event)"
+        (deleteTagEvent)="deleteTag($event)"
+      >
+      </app-tag>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-10 offset-2">
+      <app-location-map [coord]="location.coord" [editable]="true" (coord$)="onChangeCoord($event)"></app-location-map>
+    </div>
+  </div>
+</form>

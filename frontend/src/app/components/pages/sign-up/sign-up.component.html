@@ -1,0 +1,105 @@
+<div class="pt-5">
+  <div class="row">
+    <div class="col-md-6 mx-auto">
+      <span class="anchor" id="formSignUp"></span>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="mb-0">Registrierung</h3>
+        </div>
+
+        <div class="card-body">
+          <form class="form" [formGroup]="signUpForm" (ngSubmit)="signUpUser()">
+            <div class="form-group">
+              <label for="inputUsername" class="fw-bold">Username</label>
+              <input
+                type="text"
+                name="username"
+                formControlName="username"
+                class="form-control"
+                id="inputUsername"
+                aria-describedby="usernameHelp"
+                placeholder="Username"
+              />
+              <div *ngIf="submitted && signUpForm.controls.username.errors" class="error">
+                <small class="form-text text-danger" *ngIf="signUpForm.controls.username.errors.required"
+                  >Username ist erforderlich!
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group mt-2">
+              <label for="inputEmail" class="fw-bold">E-Mail</label>
+              <input
+                type="text"
+                name="email"
+                formControlName="email"
+                class="form-control"
+                id="inputEmail"
+                placeholder="beispiel@email.at"
+              />
+              <div *ngIf="submitted && signUpForm.controls.email.errors" class="error">
+                <small class="form-text text-danger" *ngIf="signUpForm.controls.email.errors.required"
+                  >E-Mail ist erforderlich!
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group mt-2">
+              <label for="password" class="fw-bold">Passwort</label>
+              <input
+                type="password"
+                name="originalPassword"
+                formControlName="originalPassword"
+                class="form-control"
+                id="originalPassword"
+                placeholder="Passwort"
+              />
+              <div class="text-secondary mt-1" *ngIf="signUpForm.controls.originalPassword.errors && !signUpForm.controls.originalPassword.errors.minlength">
+                <i class="bi bi-info-lg"></i>
+                Passwort muss mindestens 4 Zeichen lang sein
+              </div>
+              <div *ngIf="submitted && signUpForm.controls.originalPassword.errors" class="error">
+                <small class="form-text text-danger" *ngIf="signUpForm.controls.originalPassword.errors.required"
+                  >Passwort ist erforderlich!
+                </small>
+                <small class="form-text text-danger" *ngIf="signUpForm.controls.originalPassword.errors.minlength"
+                  >Passwort muss mindestens 4 Zeichen lang sein!
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group mt-2">
+              <label for="repeatedPassword" class="fw-bold">Passwort wiederholen</label>
+              <input
+                type="password"
+                name="repeatedPassword"
+                formControlName="repeatedPassword"
+                class="form-control"
+                id="repeatedPassword"
+                placeholder="Passwort wiederholen"
+              />
+              <div *ngIf="submitted && signUpForm.controls.repeatedPassword.errors" class="error">
+                <small class="form-text text-danger" *ngIf="signUpForm.controls.repeatedPassword.errors.required"
+                  >Passwort ist erforderlich!
+                </small>
+                <small class="form-text text-danger" *ngIf="signUpForm.controls.repeatedPassword.errors.minlength"
+                  >Passwort muss mindestens 4 Zeichen lang sein!
+                </small>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              [disabled]="!signUpForm.valid"
+              (click)="signUpUser()"
+              class="btn btn-primary float-right mt-3 w-100"
+            >
+              Registrieren
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

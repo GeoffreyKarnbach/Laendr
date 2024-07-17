@@ -1,0 +1,34 @@
+<div *ngIf="getShow()">
+  <div class="row">
+    <div class="col-6">
+      <h1 class="fs-5 fw-bold mt-3 mb-2">Zu bewertende Transaktionen</h1>
+      <div *ngFor="let transaction of notReviewedTransactions">
+        <app-transaction-item [transaction]="transaction" [compact]="true"></app-transaction-item>
+      </div>
+      <p *ngIf="!notReviewedTransactions || notReviewedTransactions.length === 0" class="text-secondary text-center mt-3">Keine passenden Transaktion gefunden...</p>
+    </div>
+
+    <div class="col-6">
+      <h1 class="fs-5 fw-bold mt-3 mb-2">Deine bisherigen Reviews</h1>
+      <div class="row">
+        <div class="col-3 d-flex flex-column align-items-center justify-content-center">
+          <div class="badge {{getColor()}}">
+            <div class="badgecenter"><i class="bi bi-award fs-2"></i></div>
+          </div>
+        </div>
+        <div class="col-9">
+          <div class="center">
+            <h2>{{getShortString()}}</h2>
+          </div>
+        </div>
+      </div>
+
+      <p>{{getBarString()}}</p>
+      <div class="progress" role="progressbar" >
+        <div class="progress-bar overflow-visible" [style.width]="getPercentageString()">{{getPercentageString()}}</div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

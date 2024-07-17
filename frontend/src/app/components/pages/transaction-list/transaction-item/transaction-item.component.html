@@ -1,0 +1,61 @@
+<div
+  class="card box-shadow cursor my-3"
+  [class.disabled]="isCancelDisabled()"
+  (click)="onClickCard()"
+  tabindex="0"
+  *ngIf="!compact"
+>
+  <div class="row g-0">
+    <div class="col-4">
+      <div class="card-body">
+        <h5 class="card-title">{{ transaction.locationName }}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">{{ transaction.createdAt | date : 'dd.MM.yyyy HH:mm' }}</h6>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="card-body">
+        <div class="card-text">{{ transaction.partnerName }}</div>
+        <div class="card-text">{{ transaction.partnerEmail }}</div>
+        <div class="card-text">{{ transaction.partnerPhone }}</div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="card-body">
+        <div class="card-text">
+          {{ transaction?.timeslot.start | date : 'dd.MM.yyyy HH:mm' }} -
+          {{ transaction?.timeslot.end | date : 'dd.MM.yyyy HH:mm' }}
+        </div>
+        <div *ngIf="transaction?.completedAt != null; else notPaidYet">
+          <div class="card-text">Abgeschlossen am: {{ transaction.completedAt | date : 'dd.MM.yyyy' }}</div>
+          <div class="card-text">Bezahlter Betrag: {{ getPaidAmount().toFixed(2) }}€</div>
+        </div>
+        <ng-template #notPaidYet
+          ><div class="card-text">Vereinbarter Betrag: {{ transaction?.totalConcerned.toFixed(2) }}€</div></ng-template
+        >
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="card box-shadow cursor my-2"
+  [class.disabled]="isCancelDisabled()"
+  (click)="onClickCard()"
+  tabindex="0"
+  *ngIf="compact"
+>
+  <div>
+    <div class="card-body p-2">
+      <h5 class="card-title">
+        {{ transaction.locationName }} <span *ngIf="compact">({{ roleString() }})</span>
+      </h5>
+      <h6 class="card-subtitle text-muted">
+        {{ transaction?.timeslot.start | date : 'dd.MM.yyyy HH:mm' }} -
+        <span class="text-muted" *ngIf="!isEndDayEqualToStartDay(transaction?.timeslot)">{{
+          transaction?.timeslot.end | date : 'dd.MM.yyyy'
+        }}</span>
+        {{ transaction?.timeslot.end | date : 'HH:mm' }}
+      </h6>
+    </div>
+  </div>
+</div>

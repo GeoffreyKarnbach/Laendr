@@ -1,0 +1,6 @@
+<div class="starbox text-dark" [ngClass]="{ 'starbox-small': small }">
+  <i *ngFor="let i of [1, 3, 5, 7, 9]" [ngClass]="iconClassForIndex(i, stars)"> </i>
+  <span *ngIf="showCount" class="reviewcount text-secondary" [class]="textClass"
+    >({{ count }})</span
+  >
+</div>

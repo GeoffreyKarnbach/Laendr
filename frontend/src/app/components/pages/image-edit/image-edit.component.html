@@ -1,0 +1,16 @@
+<div class="image-edit-header" style="display:inline-flex;margin-top: 2rem;">
+  <h3>Bilder bearbeiten</h3>
+  <div style="margin-left: 5rem;">
+    <button type="button" (click)="selectImage()" class="btn btn-outline-primary">
+      <input type="file" id="upload-file" style="visibility: hidden;width: 1px; height: 1px; position: absolute;" (change)="onFileSelected($event)" accept="image/*"/>
+      Hinzufügen
+    </button>
+    <button style="margin-left:0.5rem" (click)="uploadFinished()" type="button" class="btn btn-primary">Fertig</button>
+  </div>
+</div>
+<div id="image-container">
+  <div *ngFor="let image of imageURLs; let i = index">
+      <app-single-image [imageUrl]="image" [imagePosition]="i+1" [totalImageNumber]="imageCounter" (moveImageLeftEvent)="moveImageLeft($event)" (moveImageRightEvent)="moveImageRight($event)" (deleteImageEvent)="deleteImage($event)"></app-single-image>
+  </div>
+</div>
+

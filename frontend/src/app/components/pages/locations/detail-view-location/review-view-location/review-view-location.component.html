@@ -1,0 +1,26 @@
+<div class="row" *ngIf="reviews; else noReviewsBlock">
+  <div *ngIf="reviews.length !== 0; else noReviewsBlock">
+    <app-pageable [collectionSize]="totalAmount" (pageChange)="onPageChange($event)" [page]="page + 1">
+      <ng-template let-pageInfo>
+        <div class="row my-2 border-bottom" *ngFor="let review of reviews">
+          <div class="row" style="margin-bottom: 0.5em">
+            <div class="col-10">
+              {{ review.comment }}
+            </div>
+            <div class="col text-end">{{ review.createdAt | date : 'dd.MM.yyyy' }}</div>
+            <app-ratings-display
+              [stars]="review.rating | ratingToStars"
+              [showCount]="false"
+              [small]="true"
+              style="margin-left: 0.5em"
+            ></app-ratings-display>
+          </div>
+        </div>
+      </ng-template>
+    </app-pageable>
+  </div>
+</div>
+
+<ng-template #noReviewsBlock>
+  <p class="text-secondary">Für diese Location wurde noch kein Review abgegeben.</p>
+</ng-template>

@@ -1,0 +1,159 @@
+<!-- Start of upper half -->
+<div *ngIf="lender.id !== -1" class="container m-1">
+  <div class="row m-1">
+    <!-- name -->
+    <div class="row mxb-1">
+      <p class="fs-2 text-primary">
+        <b>{{ lender.name }}</b>
+        <app-ratings-display
+          class="ms-2"
+          [stars]="lender.reputation?.averageRating | ratingToStars"
+          [count]="lender.reputation?.ratings ?? 0"
+          small="true"
+        ></app-ratings-display>
+      </p>
+    </div>
+    <br />
+    <!-- Start of Left bracket -->
+    <div class="col-7 m-1">
+      <div class="row mxy-1">
+        <!-- description -->
+        <div *ngIf="lender.description; else elseBlockDescription">
+          <p class="fs-5">{{ lender.description }}</p>
+        </div>
+        <ng-template #elseBlockDescription>
+          <p class="fs-5">Dieser Vermieter hat keine Beschreibung über sich angegeben</p>
+        </ng-template>
+        <!-- state -->
+        <div *ngIf="lender.state">
+          <p class="fs-5">{{ lender.state | enumIntToDescription }}</p>
+        </div>
+        <!-- created date -->
+        <div *ngIf="lender.createdAt">
+          <p class="fs-5">Vermieter seit: {{ lender.createdAt | date : 'dd.MM.yyyy' }}</p>
+        </div>
+      </div>
+    </div>
+    <!-- Start of Right bracket -->
+    <div class="col-4 m-1 position-relative">
+      <div class="">
+        <!-- phone -->
+        <div class="row">
+          <div *ngIf="lender.phone">
+            <p class="text-end fs-5">
+              <i class="bi bi-telephone-fill"></i>
+              <a href="tel:{{ lender.phone }}">
+                {{ lender.phone }}
+              </a>
+            </p>
+          </div>
+          <br />
+        </div>
+        <!-- email -->
+        <div class="row">
+          <div *ngIf="lender.email">
+            <p class="text-end fs-5">
+              <i class="bi bi-envelope-fill"></i>
+              <a href="mailto:{{ lender.email }}">
+                {{ lender.email }}
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-11">
+      <hr />
+
+      <div *ngIf="lender.callerIsThisLender" class="d-flex flex-row-reverse">
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            (change)="reloadLocations()"
+            [(ngModel)]="includeRemovedLocations"
+            id="flexCheckDefault"
+          />
+          <label class="form-check-label" for="flexCheckDefault"> Entfernte Locations inkludieren </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Start of lower half (locations) -->
+  <div *ngIf="totalAmount > 0; else elseBlockLocations" style="margin-left: 2rem">
+    <div class="row">
+      <div class="col-11">
+        <select class="form-select" (change)="onChangeSort($event.target.value)">
+          <option
+            *ngFor="let sortOption of enumSort | keyvalue"
+            [value]="sortOption.key"
+            [selected]="sort === sortOption.key"
+          >
+            {{ enumToDisplaySort[sortOption.key] }}
+          </option>
+        </select>
+
+        <app-pageable [collectionSize]="totalAmount" (pageChange)="onPageChange($event)" [page]="page + 1">
+          <ng-template let-pageInfo>
+            <div class="row my-3" *ngFor="let location of locations">
+              <div class="card box-shadow cursor" (click)="onClickCard(location.id, location.isRemoved)">
+                <div class="row no-gutters">
+                  <div class="col-auto px-0 me-2 d-flex rounded-start image-container">
+                    <div class="bg-light d-flex">
+                      <img [src]="location.primaryImageUrl" class="img-fluid rounded-start image_thumbnail" alt="" />
+                    </div>
+                  </div>
+                  <div class="col my-3 ps-1">
+                    <div class="card-block px-2">
+                      <h5 class="card-title">
+                        <span [class]="location.isRemoved ? 'location-removed-title' : 'text-primary fw-bold'">{{
+                          location.name
+                        }}</span>
+                        <span class="text-secondary m-1" *ngIf="location.isRemoved"><i>(entfernt)</i></span>
+
+                        <app-ratings-display
+                          class="rating-display"
+                          [stars]="location.reputation?.averageRating | ratingToStars"
+                          [count]="location.reputation?.ratings ?? 0"
+                        ></app-ratings-display>
+                      </h5>
+
+                      <h6 class="card-subtitle mb-2 text-muted">{{ location.createdAt | date : 'dd.MM.yyyy' }}</h6>
+
+                      <p class="card-text">
+                        {{
+                          location.description.length > 100
+                            ? (location.description | slice : 0 : 100) + '...'
+                            : location.description
+                        }}
+                      </p>
+                      <p class="card-text">
+                        {{ location.size }}m²<br />{{ location.plz.plz }} {{ location.plz.ort }}, {{ location.address }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </app-pageable>
+      </div>
+    </div>
+  </div>
+
+  <!-- This is shown if no locations found -->
+  <ng-template #elseBlockLocations>
+    <div class="row m-1">
+      <div class="col m-1">
+        <div class="row mxb-1">
+          <br />
+          <p class="fs-6">Dieser Vermieter hat aktuell keine Locations angeboten.</p>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>

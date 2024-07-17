@@ -1,0 +1,221 @@
+<div class="row mt-4">
+  <div class="col-6">
+    <div>
+      <div class="d-flex flex-row justify-content-center">
+        <span class="fs-5 me-2" style="margin: 0">Zeitfenster am</span>
+        <div class="input-group" style="width: unset">
+          <input
+            class="form-control"
+            placeholder="dd.mm.yyyy"
+            [(ngModel)]="selectedDay"
+            ngbDatepicker
+            #selectedDayPicker="ngbDatepicker"
+            (dateSelect)="daySelectionChanged($event)"
+            [markDisabled]="markDisabledDays"
+          />
+          <button
+            class="btn btn-outline-secondary bi bi-calendar3"
+            (click)="selectedDayPicker.toggle()"
+            type="button"
+          ></button>
+        </div>
+      </div>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Anfang</th>
+            <th scope="col">Ende</th>
+            <th scope="col">Preis <span class="text-muted">(pro Stunde)</span></th>
+            <th scope="col"></th>
+            <th *ngIf="callerIsLocationOwner" scope="col">
+              <div class="create-edit-popover-container d-flex flex-row justify-content-center">
+                <button
+                  class="btn btn-light"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="Zeitfenster anlegen"
+                  [ngbPopover]="createEditPopoverTemplate"
+                  [autoClose]="'outside'"
+                  #popoverTemplateRef="ngbPopover"
+                  (click)="onOpenCreatePopover(popoverTemplateRef)"
+                >
+                  <i class="bi bi-calendar-plus"></i>
+                </button>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let timeslot of currentTimeslots">
+            <tr
+              class="table-row create-edit-popover-container"
+              [class.selected-row]="timeslot === selectedRowTimeslot"
+              (click)="onSelectRow(timeslot)"
+              #createEditPopoverTarget
+            >
+              <td>{{ timeslot.start | date : 'HH:mm' }}</td>
+              <td>
+                {{ timeslot.end | date : 'HH:mm' }}
+                <span class="text-muted" *ngIf="!isEndDayEqualToStartDay(timeslot)"
+                  >({{ timeslot.end | date : 'dd.MM.yyyy' }})</span
+                >
+              </td>
+              <td>
+                €{{ timeslot.price | number }} <span class="text-muted">(€{{ timeslot.priceHourly | number }})</span>
+              </td>
+
+              <td>
+                <ng-container *ngIf="callerIsLocationOwner">
+                  <span *ngIf="timeslot.isUsed" class="badge bg-success">Gebucht</span>
+                  <span *ngIf="!timeslot.isUsed && timeslot.isRequested" class="badge bg-info">Angefragt</span>
+                </ng-container>
+                <ng-container *ngIf="!callerIsLocationOwner && authService.isLoggedIn()">
+                  <ng-container *ngIf="!timeslot.isUsed">
+                    <ng-container *ngIf="timeslot.isRequestedByCallingUser">
+                      <span class="badge bg-info me-2">Angefragt</span>
+                      <button class="btn btn-primary btn-sm my-1" (click)="returnRequestedTimeslot(timeslot)">
+                        Abbrechen
+                      </button>
+                    </ng-container>
+                    <ng-container *ngIf="!timeslot.isRequestedByCallingUser">
+                      <button
+                        *ngIf="!(selectedTimeslotId === timeslot.id)"
+                        class="btn btn-primary btn-sm"
+                        (click)="selectedTimeslotId = timeslot.id"
+                      >
+                        Anfragen
+                      </button>
+                      <button
+                        *ngIf="selectedTimeslotId === timeslot.id"
+                        class="btn btn-primary btn-sm"
+                        (click)="requestTimeslot(timeslot.id)"
+                      >
+                        Abschicken
+                      </button>
+                    </ng-container>
+                  </ng-container>
+                  <ng-container *ngIf="timeslot.isUsed">
+                    <span *ngIf="timeslot.isRequestedByCallingUser" class="badge bg-success">Gebucht</span>
+                    <span *ngIf="!timeslot.isRequestedByCallingUser" class="badge bg-secondary">Nicht verfügbar</span>
+                  </ng-container>
+                </ng-container>
+              </td>
+
+              <td *ngIf="callerIsLocationOwner">
+                <ng-container *ngIf="!timeslot.isUsed && !timeslot.isRequested">
+                  <div class="d-flex flex-row justify-content-center">
+                    <button
+                      class="btn btn-primary btn-sm mx-1"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title="Zeitfenster bearbeiten"
+                      #popoverTemplateRef="ngbPopover"
+                      (click)="onOpenEditPopover(timeslot, popoverTemplateRef)"
+                      [ngbPopover]="createEditPopoverTemplate"
+                      [positionTarget]="createEditPopoverTarget"
+                      [autoClose]="'outside'"
+                    >
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button
+                      class="btn btn-danger btn-sm mx-1"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title="Zeitfenster löschen"
+                      (click)="deleteTimeslot(timeslot.id)"
+                    >
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                </ng-container>
+              </td>
+            </tr>
+
+            <ng-container *ngIf="selectedTimeslotId === timeslot.id">
+              <tr class="table-row">
+                <td colspan="4">
+                  <div class="form-floating">
+                    <textarea class="form-control" [(ngModel)]="initialMessage" id="floatingTextarea"></textarea>
+                    <label for="floatingTextarea">Schreibe eine erste Nachricht an den Vermieter</label>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+          </ng-container>
+        </tbody>
+      </table>
+      <p *ngIf="!currentTimeslots || currentTimeslots.length === 0" class="text-secondary text-center">
+        Keine Zeitslots für das angegebene Zeitfenster gefunden
+      </p>
+    </div>
+  </div>
+
+  <div class="col-6" *ngIf="callerIsLocationOwner && selectedRowTimeslot">
+    <span class="fs-5">
+      Anfragen für {{ selectedRowTimeslot.start | date : 'HH:mm' }} - {{ selectedRowTimeslot.end | date : 'HH:mm' }}
+    </span>
+    <div *ngIf="transactions.length === 0" class="text-secondary">Keine Anfragen</div>
+    <app-pageable
+      *ngIf="transactions.length > 0"
+      [collectionSize]="transactionsTotalAmount"
+      (pageChange)="onPageChange($event)"
+      [page]="transactionsPage + 1"
+    >
+      <ng-template let-pageInfo>
+        <div *ngFor="let transaction of transactions">
+          <div class="card box-shadow cursor my-2 p-2 {{ returnTimeslotUsedStyleClass() }}">
+            <div class="row">
+              <div class="col-4">
+                <h6>{{ transaction.partnerName }}</h6>
+                <app-ratings-display
+                  [count]="transaction.partnerReputation.ratings"
+                  [stars]="transaction.partnerReputation.averageRating | ratingToStars"
+                  [small]="true"
+                ></app-ratings-display>
+              </div>
+              <div class="col-4">
+                <div>
+                  <a href="mailto: {{ transaction.partnerEmail }}">{{ transaction.partnerEmail }}</a>
+                </div>
+                <div>
+                  <a href="tel: {{ transaction.partnerPhone }}">{{ transaction.partnerPhone }}</a>
+                </div>
+              </div>
+              <div class="col-4 d-flex align-items-end flex-column">
+                <div class="mt-auto">
+                  <button
+                    class="btn btn-danger"
+                    (click)="cancelTransaction(transaction)"
+                    style="margin-right: 0.25em"
+                    title="Anfrage ablehnen"
+                  >
+                    <i class="bi-x-lg"></i>
+                  </button>
+                  <button
+                    class="btn btn-primary"
+                    (click)="acceptTransaction(transaction)"
+                    *ngIf="!selectedRowTimeslot.isUsed"
+                    title="Anfrage akzeptieren"
+                  >
+                    <i class="bi-check-lg"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </app-pageable>
+  </div>
+
+  <ng-template #createEditPopoverTemplate>
+    <app-timeslot-create-edit
+      [selectedDay]="selectedDay"
+      [locationId]="locationId"
+      [isPopoverInCreateMode]="isPopoverInCreateMode"
+      [timeslot]="timeslotForUpdateAndCreate"
+      (createOrUpdateFinished)="onCreateOrEditFinisihed()"
+    ></app-timeslot-create-edit>
+  </ng-template>
+</div>

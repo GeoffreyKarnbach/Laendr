@@ -1,0 +1,60 @@
+<h1>Admin User Verwaltung</h1>
+
+<input
+  type="checkbox"
+  [(ngModel)]="displayOnlyLocked"
+  [ngModelOptions]="{ standalone: true }"
+  id="displayOnlyLocked"
+  (change)="onDisplayOnlyLockedChange($event)"
+/>
+<label for="displayOnlyLocked" style="margin-left: 0.25em">Nur gesperrte anzeigen</label>
+
+<app-pageable [collectionSize]="totalResults" [page]="page + 1" (pageChange)="onPageChange($event)" [pageSize]="10">
+  <ng-template let-userList>
+    <table class="table">
+      <thead>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Gesperrt</th>
+        <th>Vermieter</th>
+        <th>Aktionen</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of allUsers">
+          <td>{{ user.id }}</td>
+          <td>
+            <a [routerLink]="['/user', user.id]">{{ user.name }}</a>
+          </td>
+          <td>{{ user.email }}</td>
+          <td>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                [(ngModel)]="user.locked"
+                [disabled]="true"
+              />
+            </div>
+          </td>
+          <td><div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [(ngModel)]="user.lender"
+              [disabled]="true"
+            />
+          </div></td>
+          <td>
+            <button title="Entsperren" type="button" class="btn btn-success" *ngIf="user.locked" (click)="unlockUser(user.id)">
+              <i class="bi-unlock"></i>
+            </button>
+            <button title="Sperren" type="button" class="btn btn-danger" *ngIf="!user.locked" (click)="lockUser(user.id)">
+              <i class="bi-lock-fill"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-template>
+</app-pageable>

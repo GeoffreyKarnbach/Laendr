@@ -1,0 +1,5 @@
+<app-review-transactions *ngIf="authService.isLoggedIn()"></app-review-transactions>
+<app-cancelled-transactions *ngIf="authService.isLoggedIn()"></app-cancelled-transactions>
+<app-home-transactions *ngIf="authService.isLoggedIn()"></app-home-transactions>
+<hr *ngIf="authService.isLoggedIn()" />
+<app-home-location-display></app-home-location-display>

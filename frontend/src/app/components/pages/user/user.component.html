@@ -1,0 +1,199 @@
+<form #form="ngForm" (ngSubmit)="onSubmit(form)">
+  <div class="row mt-2">
+    <!-- First column content -->
+    <div class="col-md-6">
+      <h2>Allgemeine Informationen</h2>
+      <div class="row">
+        <label for="userName" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">Name</label>
+        <div class="col-md-10 col-lg-8 mb-2">
+          <input
+            type="text"
+            id="userName"
+            name="userName"
+            class="form-control"
+            [class]="dynamicCssClassesForInput(userNameModel)"
+            [(ngModel)]="user.name"
+            (ngModelChange)="userDataHasBeenChanged = true"
+            #userNameModel="ngModel"
+            required
+          />
+          <div class="invalid-feedback">Name ist notwendig</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <label for="userEmail" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">Email</label>
+        <div class="col-md-10 col-lg-8 mb-2">
+          <input
+            type="email"
+            id="userEmail"
+            name="userEmail"
+            class="form-control"
+            [class]="dynamicCssClassesForInput(locationNameModel)"
+            [(ngModel)]="user.email"
+            (ngModelChange)="userDataHasBeenChanged = true"
+            #locationNameModel="ngModel"
+            required
+          />
+          <div class="invalid-feedback">Email ist notwendig</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <label for="locationPlz" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">PLZ</label>
+        <div class="col-md-10 col-lg-4 mb-2">
+          <input
+            type="text"
+            id="locationPlz"
+            name="locationPlz"
+            class="form-control"
+            [class]="dynamicCssClassesForInput(userPlzModel)"
+            [(ngModel)]="user.plz.plz"
+            (ngModelChange)="plzInputChange.next($event)"
+            #userPlzModel="ngModel"
+            list="plz-suggestions"
+          />
+          <datalist id="plz-suggestions">
+            <option *ngFor="let plz of plzSuggestions" [value]="plz.plz"></option>
+          </datalist>
+        </div>
+      </div>
+      <div class="row">
+        <label for="userState" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">Bundesland</label>
+        <div class="col-md-10 col-lg-4 mb-2">
+          <select class="form-select" id="userState" name="userState" [(ngModel)]="user.state" (ngModelChange)="userDataHasBeenChanged = true">
+            <option value="EMPTY"></option>
+            <option value="W">Wien</option>
+            <option value="NOE">Niederösterreich</option>
+            <option value="OOE">Oberösterreich</option>
+            <option value="BGLD">Burgenland</option>
+            <option value="KTN">Kärnten</option>
+            <option value="SBG">Salzburg</option>
+            <option value="STMK">Steiermark</option>
+            <option value="T">Tirol</option>
+            <option value="VBG">Vorarlberg</option>
+          </select>
+        </div>
+      </div>
+
+      <h2>Mieter Informationen</h2>
+      <div class="row">
+        <label for="renterEmail" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">Email</label>
+        <div class="col-md-10 col-lg-8 mb-2">
+          <input
+            type="email"
+            id="renterEmail"
+            name="renterEmail"
+            class="form-control"
+            [class]="dynamicCssClassesForInput(renterEmailModel)"
+            [(ngModel)]="user.renterEmail"
+            (ngModelChange)="userDataHasBeenChanged = true"
+            #renterEmailModel="ngModel"
+          />
+        </div>
+      </div>
+      <div class="row">
+        <label for="renterPhone" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">Telefonnummer</label>
+        <div class="col-md-10 col-lg-4 mb-2">
+          <input
+            type="text"
+            id="renterPhone"
+            name="renterPhone"
+            class="form-control"
+            [class]="dynamicCssClassesForInput(renterPhoneModel)"
+            [(ngModel)]="user.renterPhone"
+            (ngModelChange)="userDataHasBeenChanged = true"
+            #renterPhoneModel="ngModel"
+          />
+        </div>
+      </div>
+
+      <ng-container *ngIf="user.lender">
+        <h2>Vermieter Informationen</h2>
+        <div class="row">
+          <label for="lenderEmail" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">Email</label>
+          <div class="col-md-10 col-lg-8 mb-2">
+            <input
+              type="email"
+              id="lenderEmail"
+              name="lenderEmail"
+              class="form-control"
+              [class]="dynamicCssClassesForInput(lenderEmailModel)"
+              [(ngModel)]="user.lenderEmail"
+              (ngModelChange)="userDataHasBeenChanged = true"
+              #lenderEmailModel="ngModel"
+            />
+          </div>
+        </div>
+
+        <div class="row">
+          <label for="lenderPhone" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">Telefonnummer</label>
+          <div class="col-md-10 col-lg-4 mb-2">
+            <input
+              type="text"
+              id="lenderPhone"
+              name="lenderPhone"
+              class="form-control"
+              [class]="dynamicCssClassesForInput(lenderPhoneModel)"
+              [(ngModel)]="user.lenderPhone"
+              (ngModelChange)="userDataHasBeenChanged = true"
+              #lenderPhoneModel="ngModel"
+            />
+          </div>
+        </div>
+
+        <div class="row">
+          <label for="lenderDescription" class="col-form-label text-md-end text-md-end text-muted col-md-2 col-lg-4">
+            Beschreibung
+          </label>
+          <div class="col-md-10 col-lg-8 mb-2">
+            <textarea
+              class="form-control"
+              id="lenderDescription"
+              name="lenderDescription"
+              [(ngModel)]="user.lenderDescription"
+              (ngModelChange)="userDataHasBeenChanged = true"
+            ></textarea>
+          </div>
+        </div>
+      </ng-container>
+
+      <div class="mt-4 d-flex justify-content-end">
+        <div *ngIf="isAdminView()" style="margin-right:0.5em;">
+          <button type="button" class="btn btn-warning" *ngIf="!user.locked" (click)="lockUser()">Account sperren</button>
+          <button type="button" class="btn btn-primary" *ngIf="user.locked" (click)="unlockUser()">Account entsperren</button>
+        </div>
+        <button type="button" class="btn btn-danger me-2" (click)="deleteUser()">Account löschen</button>
+        <button type="submit" class="btn btn-primary" [disabled]="!form.valid || !userDataHasBeenChanged">Speichern</button>
+      </div>
+    </div>
+
+    <div class="col-md-6 p-5">
+      <h5>Geben Sie ihren Standort an:</h5>
+      <app-location-map
+        [coord]="user.coordinates"
+        (coord$)="coordChanged($event)"
+        [editable]="true"
+        [zoom]="10"
+      ></app-location-map>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col-md-6">
+      <h2>Passwort ändern</h2>
+      <app-passwords></app-passwords>
+    </div>
+
+    <div class="col-md-6">
+      <div class="row col-md-12" *ngIf="!user.lender">
+        <app-user-lender-optin></app-user-lender-optin>
+      </div>
+
+    </div>
+  </div>
+</form>
+
+
+

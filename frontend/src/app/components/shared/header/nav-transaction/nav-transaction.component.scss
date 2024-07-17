@@ -1,0 +1,32 @@
+.icon-wrapper {
+  position: relative;
+}
+
+.cursor {
+  cursor: pointer;
+}
+
+.icon-color {
+  color: var(--bs-navbar-brand-color)
+}
+
+.notification {
+  position: absolute;
+  top: 8px;
+  right: 6px;
+  background-color: var(--bs-danger);
+  border-radius: 100%;
+  width: 10px;
+  height: 10px;
+}
+
+.transaction-dropdown {
+  right: 0;
+  left: unset;
+}
+
+.dropdown-heading {
+  cursor: default;
+  margin-left: 1rem;
+  margin-top: 1rem;
+}

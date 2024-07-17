@@ -1,0 +1,18 @@
+<div *ngIf="ongoingTransactions.length">
+  <div class="row">
+    <div class="col-6">
+      <h1 class="fs-5 fw-bold mt-3 mb-2">Aktive Transaktionen</h1>
+      <div *ngFor="let transaction of ongoingTransactions">
+        <app-transaction-item [transaction]="transaction" [compact]="true"></app-transaction-item>
+      </div>
+      <p *ngIf="!ongoingTransactions || ongoingTransactions.length === 0" class="text-secondary text-center mt-3">Keine aktiven Transaktion gefunden...</p>
+    </div>
+    <div class="col-6">
+      <h1 class="fs-5 fw-bold mt-3 mb-2">Akzeptierte Transaktionen</h1>
+      <div *ngFor="let transaction of acceptedTransactions">
+        <app-transaction-item [transaction]="transaction" [compact]="true"></app-transaction-item>
+      </div>
+      <p *ngIf="!acceptedTransactions || acceptedTransactions.length === 0" class="text-secondary text-center mt-3">Keine akzeptierten Transaktion gefunden...</p>
+    </div>
+  </div>
+</div>

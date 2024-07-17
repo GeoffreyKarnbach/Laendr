@@ -1,0 +1,88 @@
+<div class="mt-3">
+  <div class="row mt-1">
+    <div class="col-7">Kategorie</div>
+    <div class="col-5">Sortierung</div>
+  </div>
+  <div class="row">
+    <div class="col-7">
+      <select class="form-select" [(ngModel)]="which" (change)="refreshListings()">
+        <option value="LENDER" selected>Vermieter</option>
+        <option value="RENTER">Mieter</option>
+        <option value="LOCATION">Locations</option>
+      </select>
+    </div>
+    <div class="col-5">
+      <div class="row g-0">
+        <div class="col-7">
+          <select class="form-select" [(ngModel)]="orderColumn" (change)="refreshListings()">
+            <option value="SUBJECT_NAME" selected>Bezeichnung</option>
+            <option value="KARMA">Karma</option>
+            <option value="AVERAGE_RATING">Bewertungsschnitt</option>
+            <option value="RATINGS">Bewertungsanzahl</option>
+            <option value="LAST_CHANGE">Letztes Update</option>
+          </select>
+        </div>
+        <div class="col-5">
+          <select class="form-select" [(ngModel)]="orderDirection" (change)="refreshListings()">
+            <option value="ASCENDING" selected>Aufsteigend</option>
+            <option value="DESCENDING">Absteigend</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr />
+  <div class="row mt-4">
+    <div class="col">Bezeichnung</div>
+  </div>
+  <div class="input-group">
+    <input type="text" class="form-control" [(ngModel)]="searchString" />
+    <button type="button" class="btn btn-primary" (click)="refreshListings()">Suchen</button>
+  </div>
+  <hr />
+  <div class="row">
+    <div class="col">
+      <app-pageable [collectionSize]="totalResults" [page]="page + 1" (pageChange)="onPageChange($event)">
+        <ng-template let-pageInfo>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Bezeichnung</th>
+                <th scope="col">Karma</th>
+                <th scope="col">Bewertungsschnitt</th>
+                <th scope="col">Bewertungsanzahl</th>
+                <th scope="col">Letztes Update</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let summary of result">
+                <td>{{ summary.subject }}</td>
+                <td>{{ summary.karma || 'NA' }}</td>
+                <td>{{ summary.averageRating == null ? 'NA' : summary.averageRating }}</td>
+                <td>{{ summary.ratings || '0' }}</td>
+                <td>{{ (summary.lastChange | date : 'dd.MM.yyyy HH:mm:ss') || 'NA' }}</td>
+                <td class="text-end">
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary btn-sm"
+                    (click)="applyTimeDecay(summary.subjectId)"
+                  >
+                    Zeitverfall anwenden
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary btn-sm ms-1"
+                    [routerLink]="['/ratings/details', which.toLowerCase(), summary.subjectId]"
+                  >
+                    Details
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </ng-template>
+      </app-pageable>
+    </div>
+  </div>
+</div>
