@@ -86,3 +86,7 @@ Rate your transactions to increase your rating score (Gamification)
 ![Edit your lender data](Images/EditPersonalLenderInformation.png)
 
 Change your personal data as Lender
+
+## Collaborators
+- [Raphael-Zeiler](https://github.com/Raphael-Zeiler)
+- [benjaminkasper99](https://github.com/benjaminkasper99)
