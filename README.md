@@ -90,3 +90,4 @@ Change your personal data as Lender
 ## Collaborators
 - [Raphael-Zeiler](https://github.com/Raphael-Zeiler)
 - [benjaminkasper99](https://github.com/benjaminkasper99)
+- [Sakrafux](https://github.com/Sakrafux)
